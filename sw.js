@@ -1,9 +1,14 @@
-const VERSION = 'nahj-v1';
+const VERSION = 'nahj-v2';
 const CORE = ['./', './index.html'];
-const HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'www.gstatic.com'];
+const HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'www.gstatic.com', 'cdnjs.cloudflare.com'];
+const XLSX_URL = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
+  e.waitUntil(
+    caches.open(VERSION)
+      .then(c => c.addAll(CORE).then(() => c.add(XLSX_URL).catch(() => {}))) // مكتبة Excel تُحفظ لتعمل بدون نت
+      .then(() => self.skipWaiting())
+  );
 });
 
 self.addEventListener('activate', e => {
